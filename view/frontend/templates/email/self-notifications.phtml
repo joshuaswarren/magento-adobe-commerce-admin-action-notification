@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var string[] $notifications */
+$notifications = $block->getNotifications() ?: [];
+$header = $block->getHeader() ?: '';
+?>
+<h3><?= $escaper->escapeHtml($header); ?></h3>
+<?php foreach ($notifications as $notification): ?>
+<p><?= $escaper->escapeHtml($notification); ?></p>
+<hr>
+<?php endforeach; ?>

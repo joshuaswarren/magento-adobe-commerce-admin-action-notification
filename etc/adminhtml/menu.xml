@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Creatuity_AdminActionNotification::admin_action_notification"
+             title="Admin Action Notification"
+             translate="title"
+             module="Creatuity_AdminActionNotification"
+             sortOrder="20"
+             parent="Magento_Backend::system"
+             resource="Creatuity_AdminActionNotification::admin_action_notification"
+        />
+        <add id="Creatuity_AdminActionNotification::admin_action_notification_channels"
+             title="Channels"
+             module="Creatuity_AdminActionNotification"
+             sortOrder="10"
+             parent="Creatuity_AdminActionNotification::admin_action_notification"
+             action="creatuity_admin_notification/channel/index"
+             resource="Firebear_ImportExport::admin_action_notification_channels" />
+
+        <add id="Creatuity_AdminActionNotification::admin_action_notification_rules"
+             title="Rules"
+             module="Creatuity_AdminActionNotification"
+             sortOrder="20"
+             parent="Creatuity_AdminActionNotification::admin_action_notification"
+             action="creatuity_admin_notification/rule/index"
+             resource="Creatuity_AdminActionNotification::admin_action_notification_rules" />
+
+    </menu>
+</config>
