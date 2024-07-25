@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">creatuity_admin_notification_rule_form.creatuity_admin_notification_rule_form_data_source</item>
+            <item name="namespace" xsi:type="string">creatuity_admin_notification_rule_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <deps>
+            <dep>creatuity_admin_notification_rule_form.creatuity_admin_notification_rule_form_data_source</dep>
+        </deps>
+        <buttons>
+            <button name="back">
+                <url path="*/*"/>
+                <class>secondary</class>
+                <label translate="true">Back</label>
+            </button>
+            <button name="save">
+                <label translate="true">Save</label>
+                <class>save primary</class>
+            </button>
+        </buttons>
+        <namespace>creatuity_admin_notification_rule_form</namespace>
+        <dataScope>data</dataScope>
+    </settings>
+    <dataSource name="creatuity_admin_notification_rule_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="*/*/save"/>
+        </settings>
+        <aclResource>Creatuity_AdminActionNotification::admin_action_notification_rules</aclResource>
+        <dataProvider class="Creatuity\AdminActionNotification\Ui\Form\RuleFormDataProvider"
+                      name="creatuity_admin_notification_rule_form_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>rule_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <label />
+        </settings>
+        <field name="rule_id" formElement="hidden">
+            <settings>
+                <label />
+            </settings>
+        </field>
+        <field name="rule_name" formElement="input" sortOrder="10">
+            <settings>
+                <label translate="true">Rule Name</label>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="entities" sortOrder="20"
+               formElement="select"
+               component="Magento_Ui/js/form/element/ui-select">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Creatuity\AdminActionNotification\OptionSource\LogEntityOptionSource</item>
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="showCheckbox" xsi:type="boolean">true</item>
+                    <item name="searchOptions" xsi:type="boolean">false</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">true</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                    <item name="listens" xsi:type="array">
+                        <item name="${ $.namespace }.${ $.namespace }:responseData" xsi:type="string">setParsed</item>
+                    </item>
+                    <item name="actions" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="label" xsi:type="string">selectAll</item>
+                            <item name="value" xsi:type="string" translate="true">Select All</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Tracked Entities</label>
+                <dataType>text</dataType>
+                <componentType>field</componentType>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+                 <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="channels" sortOrder="30"
+               formElement="select"
+               component="Magento_Ui/js/form/element/ui-select">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Creatuity\AdminActionNotification\OptionSource\ChannelOptionSource</item>
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="showCheckbox" xsi:type="boolean">true</item>
+                    <item name="searchOptions" xsi:type="boolean">false</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">true</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                    <item name="listens" xsi:type="array">
+                        <item name="${ $.namespace }.${ $.namespace }:responseData" xsi:type="string">setParsed</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Channels</label>
+                <dataType>int</dataType>
+                <componentType>field</componentType>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+                 <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="notification_frequency" formElement="input" sortOrder="40">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">1440</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Frequency</label>
+                <notice translate="true">Every how many minutes should a rule be fired? (24h by default)</notice>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="greater-than-equals-to" xsi:type="number">1</rule>
+                    <rule name="validate-digits" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+    </fieldset>
+</form>

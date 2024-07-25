@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Creatuity\AdminActionNotification\Api\Data\ChannelInterface"
+                type="Creatuity\AdminActionNotification\Model\Channel"/>
+    <preference for="Creatuity\AdminActionNotification\Api\Data\ChannelSearchResultsInterface"
+                type="Creatuity\AdminActionNotification\Model\ChannelSearchResults"/>
+    <preference for="Creatuity\AdminActionNotification\Api\Data\RuleInterface"
+                type="Creatuity\AdminActionNotification\Model\Rule"/>
+    <preference for="Creatuity\AdminActionNotification\Api\Data\RuleSearchResultsInterface"
+                type="Creatuity\AdminActionNotification\Model\RuleSearchResults"/>
+    <preference for="Creatuity\AdminActionNotification\Api\RuleRepositoryRepositoryInterface"
+                type="Creatuity\AdminActionNotification\Model\RuleRepository"/>
+    <preference for="Creatuity\AdminActionNotification\Api\ChannelRepositoryRepositoryInterface"
+                type="Creatuity\AdminActionNotification\Model\ChannelRepository"/>
+    <preference for="Creatuity\AdminActionNotification\Api\LogEntitiesProviderInterface"
+                type="Creatuity\AdminActionNotification\Model\DefaultLogEntitiesProvider"/>
+    <preference for="Creatuity\AdminActionNotification\Model\Resolver\LogTableResolverInterface"
+                type="Creatuity\AdminActionNotification\Model\Resolver\DefaultLogTableResolver"/>
+    <preference for="Creatuity\AdminActionNotification\Api\Data\NotificationDataInterface"
+                type="Creatuity\AdminActionNotification\Model\NotificationData"/>
+    <preference for="Creatuity\AdminActionNotification\Api\Data\NotificationRowInterface"
+                type="Creatuity\AdminActionNotification\Model\NotificationRow"/>
+    <preference for="Creatuity\AdminActionNotification\Api\Service\NotificationSendInterface"
+                type="Creatuity\AdminActionNotification\Service\NotificationSender"/>
+
+    <type name="Creatuity\AdminActionNotification\Api\ChannelRepositoryRepositoryInterface">
+        <plugin name="Creatuity_AdminActionNotification::self_notification" type="Creatuity\AdminActionNotification\Plugin\NotifyObservableChangePlugin" sortOrder="10" />
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Api\RuleRepositoryRepositoryInterface">
+        <plugin name="Creatuity_AdminActionNotification::self_notification" type="Creatuity\AdminActionNotification\Plugin\NotifyObservableChangePlugin" sortOrder="10" />
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Model\GetSelfNotificationSender">
+        <arguments>
+            <argument name="senders" xsi:type="array">
+                <item name="email" xsi:type="object">Creatuity\AdminActionNotification\Service\EmailSender</item>
+                <item name="slack" xsi:type="object">Creatuity\AdminActionNotification\Service\SlackSender</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Service\NotificationSender">
+        <arguments>
+            <argument name="senders" xsi:type="array">
+                <item name="email" xsi:type="object">Creatuity\AdminActionNotification\Service\EmailSender</item>
+                <item name="slack" xsi:type="object">Creatuity\AdminActionNotification\Service\SlackSender</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Model\Resolver\DefaultLogTableResolver">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">magento_logging_event</argument>
+            <argument name="changesTable" xsi:type="string">magento_logging_event_changes</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="AdminActionNotificationChannelDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">creatuity_admin_notification_channel</argument>
+            <argument name="resourceModel" xsi:type="string">Creatuity\AdminActionNotification\Model\ResourceModel\ChannelResource</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="AdminActionNotificationRuleDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">creatuity_admin_notification_rule</argument>
+            <argument name="resourceModel" xsi:type="string">Creatuity\AdminActionNotification\Model\ResourceModel\RuleResource</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="creatuity_admin_notification_channel_form_data_source" xsi:type="string">AdminActionNotificationChannelDataProvider</item>
+                <item name="creatuity_admin_notification_channel_listing_data_source" xsi:type="string">AdminActionNotificationChannelDataProvider</item>
+                <item name="creatuity_admin_notification_rule_form_data_source" xsi:type="string">AdminActionNotificationRuleDataProvider</item>
+                <item name="creatuity_admin_notification_rule_listing_data_source" xsi:type="string">AdminActionNotificationRuleDataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="RuleCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="add_channels" sortOrder="10" xsi:type="object">Creatuity\AdminActionNotification\Model\ResourceModel\Rule\CollectionProcessor\AddChannelsProcessor</item>
+                <item name="add_entities" sortOrder="20" xsi:type="object">Creatuity\AdminActionNotification\Model\ResourceModel\Rule\CollectionProcessor\AddEntitiesProcessor</item>
+                <item name="group" sortOrder="30" xsi:type="object">Creatuity\AdminActionNotification\Model\ResourceModel\Rule\CollectionProcessor\GroupCollectionProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Creatuity\AdminActionNotification\Model\Rule\GetRuleList">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">RuleCollectionProcessor</argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Model\Notification\GetAwaitingNotificationRules">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">RuleCollectionProcessor</argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Model\DefaultLogEntitiesProvider">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="catalog_products" xsi:type="string">Catalog Products</item>
+                <item name="catalog_categories" xsi:type="string">Catalog Categories</item>
+                <item name="urlrewrites" xsi:type="string">URL Rewrites</item>
+                <item name="catalogsearch" xsi:type="string">Catalog Search</item>
+                <item name="catalog_attributes" xsi:type="string">Catalog Attributes</item>
+                <item name="catalog_attributesets" xsi:type="string">Catalog Product Templates</item>
+                <item name="version_cms_pages" xsi:type="string">CMS Pages</item>
+                <item name="cms_blocks" xsi:type="string">CMS Blocks</item>
+                <item name="customer" xsi:type="string">Customers</item>
+                <item name="customer_groups" xsi:type="string">Customer Groups</item>
+                <item name="adminhtml_system_config" xsi:type="string">System Configuration</item>
+                <item name="catalogrule" xsi:type="string">Catalog Price Rules</item>
+                <item name="salesrule" xsi:type="string">Cart Price Rules</item>
+                <item name="adminhtml_system_account" xsi:type="string">Admin My Account</item>
+                <item name="newsletter_templates" xsi:type="string">Newsletter Templates</item>
+                <item name="newsletter_subscribers" xsi:type="string">Newsletter Subscribers</item>
+                <item name="sales_order_status" xsi:type="string">Sales Order Status</item>
+                <item name="sales_creditmemos" xsi:type="string">Sales Credit Memos</item>
+                <item name="sales_agreement" xsi:type="string">Checkout Terms and Conditions</item>
+                <item name="adminhtml_permission_roles" xsi:type="string">Admin Permission Roles</item>
+                <item name="adminhtml_permission_users" xsi:type="string">Admin Permission Users</item>
+                <item name="adminhtml_system_websites" xsi:type="string">Manage Websites</item>
+                <item name="adminhtml_system_store_groups" xsi:type="string">Manage Stores</item>
+                <item name="adminhtml_system_stores" xsi:type="string">Manage Store Views</item>
+                <item name="adminhtml_system_design" xsi:type="string">Manage Design</item>
+                <item name="adminhtml_system_currency" xsi:type="string">Manage Currency Rates</item>
+                <item name="adminhtml_email_template" xsi:type="string">Transactional Emails</item>
+                <item name="adminhtml_system_variable" xsi:type="string">Custom Variables</item>
+                <item name="backups" xsi:type="string">System Backups</item>
+                <item name="tax_customer_tax_classes" xsi:type="string">Customer Tax Classes</item>
+                <item name="tax_product_tax_classes" xsi:type="string">Catalog Product Tax Classes</item>
+                <item name="tax_rules" xsi:type="string">Tax Rules</item>
+                <item name="tax_rates" xsi:type="string">Tax Rates</item>
+                <item name="google_sitemap" xsi:type="string">XML Sitemap</item>
+                <item name="widget_instance" xsi:type="string">Widget</item>
+                <item name="cache_management" xsi:type="string">Cache Management</item>
+                <item name="index_managment" xsi:type="string">Index Management</item>
+                <item name="theme_design_config" xsi:type="string">Design Configuration</item>
+                <item name="other" xsi:type="string">Unknown Entity</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Ui\Listing\Component\RuleColumns">
+        <arguments>
+            <argument name="converters" xsi:type="array">
+                <item name="channels" xsi:type="object">Creatuity\AdminActionNotification\Model\Rule\Converter\ConvertChannelIdsToNames</item>
+                <item name="entities" xsi:type="object">Creatuity\AdminActionNotification\Model\Rule\Converter\ConvertEntitiesIdsToNames</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Model\Rule\SaveRule">
+        <arguments>
+            <argument name="saveActions" xsi:type="array">
+                <item name="save_channels" sortOrder="10" xsi:type="object">Creatuity\AdminActionNotification\Model\Rule\SaveRuleChannels</item>
+                <item name="save_entities" sortOrder="20" xsi:type="object">Creatuity\AdminActionNotification\Model\Rule\SaveRuleEntities</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Creatuity\AdminActionNotification\Model\Rule\SaveRule">
+        <arguments>
+            <argument name="ruleValidator" xsi:type="object">Creatuity\AdminActionNotification\Model\Rule\Validator\RuleValidatorComposite</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="creatuity:admin-notifications:send" xsi:type="object">Creatuity\AdminActionNotification\Command\SendNotificationsCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

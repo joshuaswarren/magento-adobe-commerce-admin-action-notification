@@ -1,0 +1,22 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var \Creatuity\AdminActionNotification\Api\Data\NotificationDataInterface[] $notifications */
+$notifications = $block->getNotifications() ?: [];
+?>
+<?php foreach ($notifications as $notification): ?>
+    <h3>
+        <?= $escaper->escapeHtml(__('%1 operation detected', $notification->getEntityLabel())); ?>
+    </h3>
+    <?php foreach ($notification->getRows() as $notificationRow): ?>
+    <p><?= $escaper->escapeHtml(__('ID')) . ': ' . $notificationRow->getSourceId() . ' ' . $notificationRow->getSourceName() ?></p>
+    <p><?= $escaper->escapeHtml(__('User')) . ': ' . $notificationRow->getUser() ?></p>
+    <p><?= $escaper->escapeHtml(__('Time')) . ': ' . $notificationRow->getTime() ?></p>
+    <p><a href="<?= $escaper->escapeHtmlAttr($notificationRow->getResultLink()) ?>"><?= __('See Deatils') ?></a></p>
+    <hr>
+    <?php endforeach; ?>
+    <hr>
+<?php endforeach; ?>

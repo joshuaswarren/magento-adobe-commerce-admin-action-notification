@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page layout="page_empty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Creatuity_AdminActionNotification::css/notfication-preview.css"/>
+    </head>
+    <body>
+        <container name="content">
+            <container name="notification-details-container" htmlTag="div" htmlId="notification-details-container" htmlClass="notification-details-container">
+                <block name="notification-details-block" template="Creatuity_AdminActionNotification::notification-details-preview.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">Creatuity\AdminActionNotification\ViewModel\NotificationRowDetailsViewModel</argument>
+                    </arguments>
+                </block>
+            </container>
+        </container>
+    </body>
+</page>

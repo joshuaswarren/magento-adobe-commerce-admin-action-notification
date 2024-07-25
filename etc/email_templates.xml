@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="admin_notification_email_template"
+              label="Admin Notification Email Template"
+              file="admin_notification_email_template.html"
+              type="html"
+              module="Creatuity_AdminActionNotification"
+              area="frontend" />
+
+    <template id="admin_self_notification_email_template"
+              label="Admin Notification Email Template"
+              file="admin_self_notification_email_template.html"
+              type="html"
+              module="Creatuity_AdminActionNotification"
+              area="frontend" />
+</config>

@@ -1,0 +1,48 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Creatuity\AdminActionNotification\ViewModel\NotificationRowDetailsViewModel $viewModel
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$viewModel = $block->getViewModel();
+$notification = $viewModel->getNotifcationRow();
+$before = $viewModel->getBefore();
+$after = $viewModel->getAfter();
+?>
+
+<h3>
+    <p>
+        <?= $escaper->escapeHtml($notification->getEntityLabel() . ' (ID: ' . ($notification->getSourceId() . ' ' . $notification->getSourceName()) . ')') ?>
+    </p>
+</h3>
+<p><?= $escaper->escapeHtml(__('User')) . ': ' . $notification->getUser() ?></p>
+<p><?= $escaper->escapeHtml(__('Time')) . ': ' . $notification->getTime() ?></p>
+<p><?= $escaper->escapeHtml(__('Log ID')) . ': ' . $notification->getId() ?></p>
+<h4><p><strong><?= $escaper->escapeHtml(__('Below list may not completely reflect all the changes')) ?></strong></p></h4>
+<table>
+    <thead>
+    <tr>
+        <th><?= $escaper->escapeHtml(__('Attribute')) ?></th>
+        <th><?= $escaper->escapeHtml(__('Before')) ?></th>
+        <th><?= $escaper->escapeHtml(__('After')) ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($viewModel->getAllAttributes() as $attribute): ?>
+        <?php
+        $valueBefore = trim($escaper->escapeHtml($viewModel->printValue($before[$attribute] ?? null)));
+        $valueAfter = trim($escaper->escapeHtml($viewModel->printValue($after[$attribute] ?? null)));
+        ?>
+        <tr class="<?= $valueAfter !== $valueBefore ? 'change-applied' : '' ?>">
+            <td><?= $attribute ?></td>
+            <td>
+                <pre><?= $valueBefore ?></pre>
+            </td>
+            <td>
+                <pre><?= $valueAfter ?></pre>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

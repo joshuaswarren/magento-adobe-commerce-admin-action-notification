@@ -1,0 +1,50 @@
+{
+    "creatuity_admin_notification_rule": {
+        "column": {
+            "rule_id": true,
+            "notification_frequency": true,
+            "last_notification": true,
+            "rule_name": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "creatuity_admin_notification_rule_entity": {
+        "column": {
+            "rule_entity_id": true,
+            "rule_id": true,
+            "entity": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_6C6A861098C52A8ACB0F3251A0D79454": true,
+            "CREATUITY_ADMIN_NOTIFICATION_RULE_ENTITY_RULE_ID_ENTITY": true
+        }
+    },
+    "creatuity_admin_notification_channel": {
+        "column": {
+            "channel_id": true,
+            "channel_value": true,
+            "unique_name": true,
+            "channel_type": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CREATUITY_ADMIN_NOTIFICATION_CHANNEL_UNIQUE_NAME": true
+        }
+    },
+    "creatuity_admin_notification_rule_channel": {
+        "column": {
+            "rule_channel_id": true,
+            "rule_id": true,
+            "channel_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CREATUITY_ADMIN_NOTIFICATION_RULE_CHANNEL_RULE_ID_CHANNEL_ID": true,
+            "FK_E490675EC536AA3CCBC3032A793FB54B": true,
+            "FK_6476C3E4A1F365203FE213EA88FCAE1A": true
+        }
+    }
+}
